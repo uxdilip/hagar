@@ -1218,3 +1218,34 @@ https://nextjs.org/docs/messages/module-not-found
  GET / [32m200[39m in 929ms[2m (next.js: 250ms, application-code: 679ms)[22m
 [36m[browser][39m [33mPlease ensure that the container has a non-static position, like 'relative', 'fixed', or 'absolute' to ensure scroll offset is calculated correctly.[39m [2m(<anonymous>)[22m
  GET / [32m200[39m in 580ms[2m (next.js: 25ms, application-code: 555ms)[22m
+[32m[1m✓[22m[39m Compiled in 205ms
+[31m[1m⨯[22m[39m Error: Could not find the module "[project]/app/components/sections/ProjectsHome.tsx#ProjectsHome" in the React Client Manifest. This is probably a bug in the React Server Components bundler.
+    at stringify (<anonymous>)
+    at stringify (<anonymous>) {
+  digest: [32m'3263161873'[39m
+}
+[32m[1m✓[22m[39m Compiled in 9ms
+ GET / [32m200[39m in 380ms[2m (next.js: 268ms, application-code: 111ms)[22m
+ GET / [32m200[39m in 628ms[2m (next.js: 172ms, application-code: 456ms)[22m
+ GET / [32m200[39m in 2.1s[2m (next.js: 266ms, application-code: 1852ms)[22m
+ GET / [32m200[39m in 457ms[2m (next.js: 6ms, application-code: 451ms)[22m
+[36m[browser][39m [33mPlease ensure that the container has a non-static position, like 'relative', 'fixed', or 'absolute' to ensure scroll offset is calculated correctly.[39m [2m(<anonymous>)[22m
+ GET / [32m200[39m in 142ms[2m (next.js: 6ms, application-code: 136ms)[22m
+ GET / [32m200[39m in 288ms[2m (next.js: 21ms, application-code: 267ms)[22m
+[36m[browser][39m [33mPlease ensure that the container has a non-static position, like 'relative', 'fixed', or 'absolute' to ensure scroll offset is calculated correctly.[39m [2m(<anonymous>)[22m
+ GET / [32m200[39m in 386ms[2m (next.js: 16ms, application-code: 370ms)[22m
+[36m[browser][39m [33mPlease ensure that the container has a non-static position, like 'relative', 'fixed', or 'absolute' to ensure scroll offset is calculated correctly.[39m [2m(<anonymous>)[22m
+ GET / [32m200[39m in 116ms[2m (next.js: 30ms, application-code: 87ms)[22m
+[36m[browser][39m [33mPlease ensure that the container has a non-static position, like 'relative', 'fixed', or 'absolute' to ensure scroll offset is calculated correctly.[39m [2m(<anonymous>)[22m
+[32m[1m✓[22m[39m Compiled in 141ms
+ GET / [32m200[39m in 66ms[2m (next.js: 15ms, application-code: 51ms)[22m
+ GET / [32m200[39m in 140ms[2m (next.js: 44ms, application-code: 96ms)[22m
+[36m[browser][39m [33mPlease ensure that the container has a non-static position, like 'relative', 'fixed', or 'absolute' to ensure scroll offset is calculated correctly.[39m [2m(<anonymous>)[22m
+ GET / [32m200[39m in 126ms[2m (next.js: 13ms, application-code: 112ms)[22m
+[36m[browser][39m [33mPlease ensure that the container has a non-static position, like 'relative', 'fixed', or 'absolute' to ensure scroll offset is calculated correctly.[39m [2m(<anonymous>)[22m
+ GET /work/fintech-dashboard [33m404[39m in 513ms[2m (next.js: 140ms, application-code: 374ms)[22m
+[36m[browser][39m [33mPlease ensure that the container has a non-static position, like 'relative', 'fixed', or 'absolute' to ensure scroll offset is calculated correctly.[39m [2m(<anonymous>)[22m
+ GET / [32m200[39m in 75ms[2m (next.js: 7ms, application-code: 68ms)[22m
+[36m[browser][39m [33mPlease ensure that the container has a non-static position, like 'relative', 'fixed', or 'absolute' to ensure scroll offset is calculated correctly.[39m [2m(<anonymous>)[22m
+ GET / [32m200[39m in 118ms[2m (next.js: 32ms, application-code: 86ms)[22m
+[36m[browser][39m [33mPlease ensure that the container has a non-static position, like 'relative', 'fixed', or 'absolute' to ensure scroll offset is calculated correctly.[39m [2m(<anonymous>)[22m
