@@ -27,7 +27,7 @@ interface NavItemsProps {
     link: string;
   }[];
   className?: string;
-  onItemClick?: () => void;
+  onItemClick?: (href: string) => void;
 }
 
 interface MobileNavProps {
@@ -125,9 +125,12 @@ export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
       {items.map((item, idx) => (
         <a
           onMouseEnter={() => setHovered(idx)}
-          onClick={onItemClick}
-          data-name="menu"
-          data-text={item.name}
+          onClick={(e) => {
+            if (onItemClick) {
+              e.preventDefault();
+              onItemClick(item.link);
+            }
+          }}
           className="relative px-4 py-2 text-ink-muted hover:text-ink"
           key={`link-${idx}`}
           href={item.link}
@@ -223,19 +226,9 @@ export const MobileNavToggle = ({
   onClick: () => void;
 }) => {
   return isOpen ? (
-    <IconX
-      className="text-ink"
-      onClick={onClick}
-      data-name="menu"
-      data-text="Close"
-    />
+    <IconX className="text-ink" onClick={onClick} />
   ) : (
-    <IconMenu2
-      className="text-ink"
-      onClick={onClick}
-      data-name="menu"
-      data-text="Menu"
-    />
+    <IconMenu2 className="text-ink" onClick={onClick} />
   );
 };
 
@@ -243,8 +236,6 @@ export const NavbarLogo = () => {
   return (
     <a
       href="#"
-      data-name="menu"
-      data-text="Home"
       className="relative z-20 mr-4 flex items-center space-x-2 px-2 py-1 text-sm font-normal text-ink"
     >
       <span className="font-serif text-xl tracking-tight text-ink">Hagar</span>

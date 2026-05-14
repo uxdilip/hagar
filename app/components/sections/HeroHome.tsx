@@ -79,6 +79,7 @@ export function HeroHome() {
 
   return (
     <section
+      id="hero"
       ref={sectionRef}
       className="relative overflow-hidden px-4 md:px-16"
       style={{ minHeight: "100dvh" }}

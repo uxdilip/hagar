@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
+import Lenis from "lenis";
 import {
   Navbar,
   NavBody,
@@ -16,25 +17,42 @@ import {
 const navItems = [
   { name: "Work", link: "#work" },
   { name: "About", link: "#about" },
-  { name: "Process", link: "#process" },
-  { name: "Contact", link: "#contact" },
 ];
 
 export function Nav() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const scrollTo = useCallback((href: string) => {
+    const target = document.querySelector(href);
+    if (!target) return;
+    // Use the global Lenis instance if available, otherwise fallback
+    const lenis = (window as unknown as { __lenis?: Lenis }).__lenis;
+    if (lenis) {
+      lenis.scrollTo(target as HTMLElement, { duration: 1.2, easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+    } else {
+      target.scrollIntoView({ behavior: "smooth" });
+    }
+  }, []);
+
+  const handleClick = useCallback(
+    (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+      e.preventDefault();
+      scrollTo(href);
+    },
+    [scrollTo],
+  );
 
   return (
     <Navbar>
       {/* Desktop */}
       <NavBody>
         <NavbarLogo />
-        <NavItems items={navItems} />
+        <NavItems items={navItems} onItemClick={scrollTo} />
         <div className="flex items-center gap-4">
           <NavbarButton
-            href="#contact"
+            href="#work"
             variant="dark"
-            data-name="menu"
-            data-text="Talk"
+            onClick={(e: React.MouseEvent<HTMLAnchorElement>) => handleClick(e, "#work")}
           >
             Let&apos;s talk
           </NavbarButton>
@@ -59,9 +77,11 @@ export function Nav() {
             <a
               key={`mobile-link-${idx}`}
               href={item.link}
-              onClick={() => setIsMobileMenuOpen(false)}
-              data-name="menu"
-              data-text={item.name}
+              onClick={(e) => {
+                e.preventDefault();
+                setIsMobileMenuOpen(false);
+                scrollTo(item.link);
+              }}
               className="relative text-ink"
             >
               <span className="block">{item.name}</span>
@@ -69,12 +89,14 @@ export function Nav() {
           ))}
           <div className="flex w-full flex-col gap-4">
             <NavbarButton
-              onClick={() => setIsMobileMenuOpen(false)}
-              href="#contact"
+              href="#work"
               variant="dark"
               className="w-full"
-              data-name="menu"
-              data-text="Talk"
+              onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
+                e.preventDefault();
+                setIsMobileMenuOpen(false);
+                scrollTo("#work");
+              }}
             >
               Let&apos;s talk
             </NavbarButton>

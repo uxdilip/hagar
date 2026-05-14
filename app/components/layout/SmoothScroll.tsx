@@ -29,6 +29,9 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
 
     lenisRef.current = lenis;
 
+    // Expose globally for nav smooth scroll
+    (window as unknown as { __lenis?: Lenis }).__lenis = lenis;
+
     // Unified animation loop via GSAP ticker.
     const onTick = (time: number) => {
       lenis.raf(time * 1000);
@@ -40,6 +43,7 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
       gsap.ticker.remove(onTick);
       lenis.destroy();
       lenisRef.current = null;
+      delete (window as unknown as { __lenis?: Lenis }).__lenis;
     };
   }, []);
 

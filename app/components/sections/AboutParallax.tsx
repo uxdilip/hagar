@@ -84,6 +84,7 @@ export function AboutParallax() {
 
   return (
     <section
+      id="about"
       ref={sectionRef}
       className="relative flex items-center justify-center overflow-hidden bg-ink"
       style={{ minHeight: "100dvh" }}
