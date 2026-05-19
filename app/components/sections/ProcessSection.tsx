@@ -10,26 +10,50 @@ const steps = [
   {
     num: "01",
     title: "Discover",
+    accent: "plum" as const,
     desc: "Research, user interviews, competitive analysis. Understanding the problem space before jumping to solutions.",
-    back: "Stakeholder workshops, user interviews, heuristic audits, analytics deep-dives, and competitive landscape mapping.",
+    activities: [
+      "Stakeholder workshops & user interviews",
+      "Heuristic audits & analytics deep-dives",
+      "Competitive landscape mapping",
+      "Foundational research synthesis",
+    ],
   },
   {
     num: "02",
     title: "Define",
+    accent: "gold" as const,
     desc: "Synthesize findings into clear problem statements, user personas, and design principles that guide every decision.",
-    back: "Affinity mapping, journey maps, Jobs-to-be-Done frameworks, and prioritized opportunity areas.",
+    activities: [
+      "Affinity mapping & journey maps",
+      "Jobs-to-be-Done frameworks",
+      "User personas & problem statements",
+      "Prioritized opportunity areas",
+    ],
   },
   {
     num: "03",
     title: "Design",
+    accent: "plum" as const,
     desc: "Wireframes → prototypes → high-fidelity UI. Iterative design with constant feedback loops and usability testing.",
-    back: "Lo-fi sketches, interactive Figma prototypes, design tokens, usability tests with real users, and rapid iteration.",
+    activities: [
+      "Lo-fi sketches & wireframes",
+      "Interactive Figma prototypes",
+      "Design tokens & component systems",
+      "Usability tests with real users",
+    ],
   },
   {
     num: "04",
     title: "Deliver",
+    accent: "gold" as const,
     desc: "Polished handoff with specs, design systems, and developer collaboration. The work doesn't end at the mockup.",
-    back: "Annotated specs, component libraries, Storybook documentation, QA reviews, and post-launch analytics tracking.",
+    activities: [
+      "Annotated specs & dev handoff",
+      "Component libraries & Storybook docs",
+      "QA reviews & polish passes",
+      "Post-launch analytics tracking",
+    ],
   },
 ];
 
@@ -48,9 +72,17 @@ function FlipCard({ step }: { step: (typeof steps)[0] }) {
     });
   };
 
+  const numClass = step.accent === "plum"
+    ? "font-serif text-8xl leading-none text-plum/25 transition-colors duration-500 group-hover:text-plum/45"
+    : "font-serif text-8xl leading-none text-gold/25 transition-colors duration-500 group-hover:text-gold/45";
+
+  const backNumClass = step.accent === "plum"
+    ? "font-serif text-6xl leading-none text-plum/20"
+    : "font-serif text-6xl leading-none text-gold/20";
+
   return (
     <div
-      className="process-card shrink-0 cursor-pointer"
+      className="process-card group shrink-0 cursor-pointer transition-transform duration-300 ease-out hover:-translate-y-1.5"
       style={{ perspective: "1200px", width: "400px", height: "500px" }}
       onClick={handleFlip}
     >
@@ -61,14 +93,15 @@ function FlipCard({ step }: { step: (typeof steps)[0] }) {
       >
         {/* Front */}
         <div
-          className="absolute inset-0 flex flex-col justify-between rounded-2xl border border-ink/5 bg-white p-10 shadow-sm"
+          className="absolute inset-0 flex flex-col justify-between rounded-2xl border border-ink/5 bg-white p-10 shadow-sm transition-shadow duration-300 group-hover:shadow-xl"
           style={{ backfaceVisibility: "hidden" }}
         >
-          <span className="font-serif text-8xl leading-none text-ink/10">
-            {step.num}
-          </span>
+          <span className={numClass}>{step.num}</span>
           <div>
-            <h3 className="font-serif text-3xl">{step.title}</h3>
+            <h3 className="relative inline-block font-serif text-3xl">
+              {step.title}
+              <span aria-hidden className="absolute -bottom-1 left-0 block h-px w-full origin-left scale-x-0 bg-ink/40 transition-transform duration-500 ease-out group-hover:scale-x-100" />
+            </h3>
             <p className="mt-3 text-base leading-relaxed text-ink-muted">
               {step.desc}
             </p>
@@ -81,13 +114,16 @@ function FlipCard({ step }: { step: (typeof steps)[0] }) {
           className="absolute inset-0 flex flex-col justify-center rounded-2xl border border-ink/5 bg-ink p-10 text-white shadow-sm"
           style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
         >
-          <span className="font-serif text-6xl leading-none text-white/10">
-            {step.num}
-          </span>
-          <h3 className="mt-4 font-serif text-3xl">{step.title}</h3>
-          <p className="mt-4 text-base leading-relaxed text-white/70">
-            {step.back}
-          </p>
+          <span className={backNumClass}>{step.num}</span>
+          <p className="mt-3 text-xs uppercase tracking-[0.2em] text-white/40">What I do</p>
+          <ul className="mt-4 space-y-2.5">
+            {step.activities.map((activity) => (
+              <li key={activity} className="flex items-start gap-3 text-sm leading-relaxed text-white/75">
+                <span aria-hidden className="mt-2.5 inline-block h-px w-3 shrink-0 bg-white/40" />
+                <span>{activity}</span>
+              </li>
+            ))}
+          </ul>
           <p className="mt-6 text-xs text-white/40">Click to flip back</p>
         </div>
       </div>
@@ -218,7 +254,7 @@ export function ProcessSection() {
 
           {/* Cards */}
           <div className="flex shrink-0 items-center gap-8 pr-[15vw]">
-            {steps.map((step) => (
+            {steps.map((step, i) => (
               <FlipCard key={step.num} step={step} />
             ))}
           </div>
@@ -244,7 +280,7 @@ export function ProcessSection() {
             key={step.num}
             className="process-card rounded-2xl border border-ink/5 bg-white p-8 shadow-sm"
           >
-            <span className="font-serif text-7xl leading-none text-ink/10">
+            <span className={`font-serif text-7xl leading-none ${step.accent === "plum" ? "text-plum/25" : "text-gold/25"}`}>
               {step.num}
             </span>
             <div className="mt-6">
@@ -252,6 +288,15 @@ export function ProcessSection() {
               <p className="mt-3 text-sm leading-relaxed text-ink-muted">
                 {step.desc}
               </p>
+              <p className="mt-6 text-[10px] uppercase tracking-[0.2em] text-ink-muted/70">What I do</p>
+              <ul className="mt-3 space-y-2 border-t border-ink/5 pt-4">
+                {step.activities.map((activity) => (
+                  <li key={activity} className="flex items-start gap-3 text-xs leading-relaxed text-ink-muted">
+                    <span aria-hidden className="mt-2 inline-block h-px w-3 shrink-0 bg-ink/30" />
+                    <span>{activity}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         ))}
