@@ -169,7 +169,7 @@ export function CustomCursor() {
     <div
       aria-hidden
       ref={shapeRef}
-      className={`pointer-events-none fixed left-0 top-0 z-[9000] flex items-center justify-center rounded-full border border-white/10 bg-ink/90 font-sans font-medium tracking-wide uppercase text-bg shadow-[0_4px_24px_rgba(0,0,0,0.18)] backdrop-blur-md transition-[width,height,font-size] duration-300 ease-[cubic-bezier(0.075,0.82,0.165,1)] ${sizeClass}`}
+      className={`pointer-events-none fixed left-0 top-0 z-[9000] flex items-center justify-center rounded-full border border-white/10 bg-white mix-blend-difference font-sans font-medium tracking-wide uppercase text-ink shadow-[0_4px_24px_rgba(0,0,0,0.18)] transition-[width,height,font-size] duration-300 ease-[cubic-bezier(0.075,0.82,0.165,1)] ${sizeClass}`}
       style={{
         willChange: "transform, width, height",
       }}

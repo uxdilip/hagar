@@ -15,15 +15,18 @@ gsap.registerPlugin(ScrollTrigger);
 export function AboutParallax() {
   const sectionRef = useRef<HTMLElement>(null);
   const bgRef = useRef<HTMLSpanElement>(null);
-  const titleRef = useRef<HTMLHeadingElement>(null);
-  const descRef = useRef<HTMLParagraphElement>(null);
+  const titleInnerRef = useRef<HTMLSpanElement>(null);
+  const descInnerRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
     const section = sectionRef.current;
     const bg = bgRef.current;
-    const title = titleRef.current;
-    const desc = descRef.current;
-    if (!section || !bg || !title || !desc) return;
+    const titleEl = titleInnerRef.current;
+    const descEl = descInnerRef.current;
+    if (!section || !bg || !titleEl || !descEl) return;
+
+    const splits: SplitType[] = [];
+    const triggers: ScrollTrigger[] = [];
 
     const ctx = gsap.context(() => {
       // Background parallax — moves -25vh over the scroll range
@@ -44,7 +47,8 @@ export function AboutParallax() {
       // Word-reveal on title + description when section enters
       const setupWordReveal = (el: HTMLElement, delay: number) => {
         const split = new SplitType(el, { types: "words" });
-        if (!split.words) return () => {};
+        if (!split.words) return;
+        splits.push(split);
         gsap.set(split.words, {
           autoAlpha: 0,
           clipPath: "polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%)",
@@ -64,22 +68,18 @@ export function AboutParallax() {
             });
           },
         });
-        return () => {
-          trigger.kill();
-          split.revert();
-        };
+        triggers.push(trigger);
       };
 
-      const cleanupTitle = setupWordReveal(title, 0);
-      const cleanupDesc = setupWordReveal(desc, 0.2);
-
-      return () => {
-        cleanupTitle();
-        cleanupDesc();
-      };
+      setupWordReveal(titleEl, 0);
+      setupWordReveal(descEl, 0.2);
     }, section);
 
-    return () => ctx.revert();
+    return () => {
+      triggers.forEach((t) => t.kill());
+      splits.forEach((s) => s.revert());
+      ctx.revert();
+    };
   }, []);
 
   return (
@@ -108,17 +108,17 @@ export function AboutParallax() {
       <div className="relative z-10 w-full px-4 py-16 md:px-16 md:py-32 lg:px-32">
         <div className="w-full md:w-[75%]">
           <h2
-            ref={titleRef}
             className="m-0 font-sans text-[clamp(36px,5vw,72px)] font-medium leading-[1.2] text-white"
           >
-            About
+            <span ref={titleInnerRef} className="inline-block">About</span>
           </h2>
           <p
-            ref={descRef}
             className="mt-6 font-sans text-[clamp(16px,1.4vw,20px)] font-normal leading-[1.6] text-white/90"
           >
-            Learn more about my journey and design philosophy — working at the
-            intersection of research, interaction, and craft.
+            <span ref={descInnerRef} className="inline-block">
+              Learn more about my journey and design philosophy — working at the
+              intersection of research, interaction, and craft.
+            </span>
           </p>
         </div>
       </div>

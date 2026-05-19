@@ -3,6 +3,9 @@
 import { useEffect, useRef, type ReactNode } from "react";
 import Lenis from "lenis";
 import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 /**
  * SmoothScroll
@@ -17,6 +20,7 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
 
     const lenis = new Lenis({
       autoRaf: false,
+      autoResize: true,
       syncTouch: true,
       touchMultiplier: isMobile ? 1 : 1.2,
       wheelMultiplier: 1,
@@ -29,8 +33,11 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
 
     lenisRef.current = lenis;
 
-    // Expose globally for nav smooth scroll
+    // Expose globally for nav smooth scroll + template.tsx resize calls
     (window as unknown as { __lenis?: Lenis }).__lenis = lenis;
+
+    // Connect Lenis scroll events to ScrollTrigger.update
+    lenis.on("scroll", ScrollTrigger.update);
 
     // Unified animation loop via GSAP ticker.
     const onTick = (time: number) => {
@@ -40,6 +47,7 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
     gsap.ticker.lagSmoothing(0);
 
     return () => {
+      lenis.off("scroll", ScrollTrigger.update);
       gsap.ticker.remove(onTick);
       lenis.destroy();
       lenisRef.current = null;

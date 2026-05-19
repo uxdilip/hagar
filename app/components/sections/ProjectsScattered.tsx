@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import Link from "next/link";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import SplitType from "split-type";
+import { caseStudies } from "@/lib/caseStudies";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -18,90 +20,66 @@ gsap.registerPlugin(ScrollTrigger);
  * Animation plays forward on scroll-in AND reverses on scroll-out, so
  * scrolling up/down re-triggers the reveal each time (matches tutorial).
  *
- * Grid is laid out as pair+single+single across 3 rows, with per-item
- * margin-top offsets for asymmetric rhythm without huge vertical gaps.
+ * Project content is sourced from `lib/caseStudies.ts` so the cards stay
+ * in sync with the case study pages. Slot 1-4 controls scattered grid layout.
  */
 
-type Project = {
-  slug: string;
-  name: string;
-  year: string;
-  tags: string[];
-  image: string;
-  slot: 1 | 2 | 3 | 4;
+type CardSlot = 1 | 2 | 3 | 4;
+
+const slotsBySlug: Record<string, CardSlot> = {
+  "sama-ai-listing": 1,
+  "mirror-booking": 2,
+  "soum-partners": 3,
+  "clepair-proposal": 4,
 };
 
-const projects: Project[] = [
-  {
-    slug: "fintech-dashboard",
-    name: "FinTech Dashboard",
-    year: "2024",
-    tags: ["Dashboard", "Data Viz"],
-    image:
-      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&h=800&fit=crop",
-    slot: 1,
-  },
-  {
-    slug: "healthcare-app",
-    name: "Healthcare Mobile App",
-    year: "2024",
-    tags: ["Mobile", "Accessibility"],
-    image:
-      "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&h=1000&fit=crop",
-    slot: 2,
-  },
-  {
-    slug: "elearning-platform",
-    name: "E-Learning Platform",
-    year: "2024",
-    tags: ["EdTech", "Web App"],
-    image:
-      "https://images.unsplash.com/photo-1501504905252-473c47e087f8?w=1200&h=800&fit=crop",
-    slot: 3,
-  },
-  {
-    slug: "design-system",
-    name: "Design System",
-    year: "2024",
-    tags: ["Design System", "Tokens"],
-    image:
-      "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=1200&h=800&fit=crop",
-    slot: 4,
-  },
-];
+const projects = caseStudies.map((cs) => ({
+  slug: cs.slug,
+  name: cs.title,
+  year: cs.year,
+  tags: cs.tags,
+  image: cs.thumbnail || cs.coverImage,
+  slot: slotsBySlug[cs.slug] ?? 1,
+}));
 
 export function ProjectsScattered() {
   const sectionRef = useRef<HTMLElement>(null);
   const labelRef = useRef<HTMLSpanElement>(null);
-  const titleRef = useRef<HTMLHeadingElement>(null);
+  const titleInnerRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
 
+    const splits: SplitType[] = [];
+    const triggers: ScrollTrigger[] = [];
+
     const ctx = gsap.context(() => {
       // Header word reveal (title — plays once, feels like a section intro)
-      if (titleRef.current) {
-        const split = new SplitType(titleRef.current, { types: "words" });
+      if (titleInnerRef.current) {
+        const split = new SplitType(titleInnerRef.current, { types: "words" });
         if (split.words) {
+          splits.push(split);
           gsap.set(split.words, {
             autoAlpha: 0,
             clipPath: "polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%)",
           });
-          ScrollTrigger.create({
-            trigger: section,
-            start: "top 80%",
-            once: true,
-            onEnter: () => {
-              gsap.to(split.words!, {
-                autoAlpha: 1,
-                clipPath: "polygon(0% 0%, 110% 0%, 100% 100%, 0% 100%)",
-                duration: 0.5,
-                ease: "power1.out",
-                stagger: 0.04,
-              });
-            },
-          });
+          triggers.push(
+            ScrollTrigger.create({
+              trigger: section,
+              start: "top 80%",
+              once: true,
+              onEnter: () => {
+                gsap.to(split.words!, {
+                  autoAlpha: 1,
+                  clipPath: "polygon(0% 0%, 110% 0%, 100% 100%, 0% 100%)",
+                  duration: 0.5,
+                  ease: "power1.out",
+                  stagger: 0.04,
+                });
+              },
+            }),
+          );
         }
       }
 
@@ -176,7 +154,11 @@ export function ProjectsScattered() {
       });
     }, section);
 
-    return () => ctx.revert();
+    return () => {
+      triggers.forEach((t) => t.kill());
+      splits.forEach((s) => s.revert());
+      ctx.revert();
+    };
   }, []);
 
   return (
@@ -194,10 +176,11 @@ export function ProjectsScattered() {
           · Selected Work · 2024
         </span>
         <h2
-          ref={titleRef}
           className="mt-6 font-serif text-[clamp(64px,14vw,11rem)] font-normal leading-[0.9] tracking-tight text-ink"
         >
-          Recent work.
+          <span ref={titleInnerRef} className="inline-block">
+            Recent work.
+          </span>
         </h2>
       </div>
 
@@ -205,7 +188,7 @@ export function ProjectsScattered() {
       <div className="mx-auto w-full max-w-[1600px]">
         <div className="scattered-grid">
           {projects.map((project) => (
-            <a
+            <Link
               key={project.slug}
               href={`/work/${project.slug}`}
               data-name="view"
@@ -219,11 +202,11 @@ export function ProjectsScattered() {
               <figcaption className="scattered-caption">
                 <span className="scattered-caption__name">{project.name}</span>
                 <span className="scattered-caption__meta">
-                  {project.tags.map((t) => `[ ${t} ]`).join(" ")}
+                  {project.tags.slice(0, 2).map((t) => `[ ${t} ]`).join(" ")}
                   <span className="scattered-caption__year">{project.year}</span>
                 </span>
               </figcaption>
-            </a>
+            </Link>
           ))}
         </div>
       </div>

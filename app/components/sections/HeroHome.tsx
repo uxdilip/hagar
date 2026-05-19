@@ -17,15 +17,18 @@ gsap.registerPlugin(ScrollTrigger);
 export function HeroHome() {
   const sectionRef = useRef<HTMLElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
-  const titleRef = useRef<HTMLHeadingElement>(null);
-  const descRef = useRef<HTMLParagraphElement>(null);
+  const titleInnerRef = useRef<HTMLSpanElement>(null);
+  const descInnerRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
     const section = sectionRef.current;
     const header = headerRef.current;
-    const title = titleRef.current;
-    const desc = descRef.current;
-    if (!section || !header || !title || !desc) return;
+    const titleEl = titleInnerRef.current;
+    const descEl = descInnerRef.current;
+    if (!section || !header || !titleEl || !descEl) return;
+
+    const splits: SplitType[] = [];
+    const tweens: gsap.core.Tween[] = [];
 
     const ctx = gsap.context(() => {
       // Parallax-lift on the header when user scrolls past the hero
@@ -41,40 +44,35 @@ export function HeroHome() {
       });
 
       // Word reveal on title + description (Thomas's CommonAbstract pattern)
-      const setupWordReveal = (
-        el: HTMLElement,
-        delay: number,
-      ): (() => void) => {
+      const setupWordReveal = (el: HTMLElement, delay: number) => {
         const split = new SplitType(el, { types: "words" });
-        if (!split.words || split.words.length === 0) return () => {};
+        if (!split.words || split.words.length === 0) return;
+        splits.push(split);
         gsap.set(split.words, {
           autoAlpha: 0,
           clipPath: "polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%)",
         });
-        const tween = gsap.to(split.words, {
-          autoAlpha: 1,
-          clipPath: "polygon(0% 0%, 110% 0%, 100% 100%, 0% 100%)",
-          delay,
-          duration: 0.4,
-          ease: "power1.out",
-          stagger: 0.03,
-        });
-        return () => {
-          tween.kill();
-          split.revert();
-        };
+        tweens.push(
+          gsap.to(split.words, {
+            autoAlpha: 1,
+            clipPath: "polygon(0% 0%, 110% 0%, 100% 100%, 0% 100%)",
+            delay,
+            duration: 0.4,
+            ease: "power1.out",
+            stagger: 0.03,
+          }),
+        );
       };
 
-      const cleanupTitle = setupWordReveal(title, 3.4);
-      const cleanupDesc = setupWordReveal(desc, 3.7);
-
-      return () => {
-        cleanupTitle();
-        cleanupDesc();
-      };
+      setupWordReveal(titleEl, 3.4);
+      setupWordReveal(descEl, 3.7);
     }, section);
 
-    return () => ctx.revert();
+    return () => {
+      tweens.forEach((t) => t.kill());
+      splits.forEach((s) => s.revert());
+      ctx.revert();
+    };
   }, []);
 
   return (
@@ -94,18 +92,20 @@ export function HeroHome() {
       >
         <div className="w-[80%] lg:w-[70%] xl:w-[55%]">
           <h1
-            ref={titleRef}
             className="m-0 font-sans text-[clamp(54px,8vw,120px)] font-medium leading-[1.1] text-ink"
           >
-            UI/UX Designer
+            <span ref={titleInnerRef} className="inline-block">
+              UI/UX Designer
+            </span>
           </h1>
           <p
-            ref={descRef}
             className="mt-4 font-sans text-[clamp(16px,1.6vw,24px)] font-normal leading-[1.5] text-ink"
           >
-            I craft digital experiences that feel natural and delightful —
-            combining research, strategy, and visual design to solve real
-            problems.
+            <span ref={descInnerRef} className="inline-block">
+              I craft digital experiences that feel natural and delightful —
+              combining research, strategy, and visual design to solve real
+              problems.
+            </span>
           </p>
         </div>
       </div>
