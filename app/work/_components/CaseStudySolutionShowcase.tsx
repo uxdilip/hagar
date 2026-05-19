@@ -1,9 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { CaseStudyMedia } from "./CaseStudyMedia";
 import { WordReveal } from "./CaseStudyText";
+
+gsap.registerPlugin(ScrollTrigger);
 
 type Step = {
   num: string;
@@ -13,16 +16,10 @@ type Step = {
 };
 
 /**
- * CaseStudySolutionShowcase — large image + 3 numbered steps.
+ * CaseStudySolutionShowcase — large image + numbered steps.
  *
- * Two display modes:
- *  1. Static (when no per-step images): single image + steps with all bodies visible.
- *  2. Accordion (when steps have `image`): only the active step's body is shown,
- *     and the image cross-fades + scales to match the active step on click.
- *
- * Animation:
- *  - Image swap: stacked imgs with GSAP opacity + scale (premium ken-burns feel).
- *  - Accordion height: CSS grid-template-rows trick (0fr → 1fr) — pure CSS, smooth.
+ * Accordion mode (steps have images): auto-loops every 3s, pauses on
+ * hover and when off-screen. Clicking a step jumps to it and resumes loop.
  */
 export function CaseStudySolutionShowcase({
   tagline,
@@ -40,13 +37,15 @@ export function CaseStudySolutionShowcase({
   steps: Step[];
 }) {
   const imageOnRight = imagePosition === "right";
-
-  // Detect accordion mode — at least one step has its own image
   const isAccordion = steps.some((s) => s.image);
   const [activeIndex, setActiveIndex] = useState(0);
   const imageRefs = useRef<(HTMLImageElement | null)[]>([]);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const pausedRef = useRef(false);
+  const isVisibleRef = useRef(false);
 
-  // Animate image swap when activeIndex changes (accordion mode only)
+  // Animate image swap
   useEffect(() => {
     if (!isAccordion) return;
     imageRefs.current.forEach((img, i) => {
@@ -61,8 +60,51 @@ export function CaseStudySolutionShowcase({
     });
   }, [activeIndex, isAccordion]);
 
+  // Auto-loop logic
+  const startLoop = useCallback(() => {
+    if (intervalRef.current) return;
+    intervalRef.current = setInterval(() => {
+      if (pausedRef.current || !isVisibleRef.current) return;
+      setActiveIndex((prev) => (prev + 1) % steps.length);
+    }, 3000);
+  }, [steps.length]);
+
+  const stopLoop = useCallback(() => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+  }, []);
+
+  // Start/stop loop based on visibility
+  useEffect(() => {
+    if (!isAccordion || !containerRef.current) return;
+
+    const trigger = ScrollTrigger.create({
+      trigger: containerRef.current,
+      start: "top 90%",
+      end: "bottom 10%",
+      onEnter: () => { isVisibleRef.current = true; startLoop(); },
+      onLeave: () => { isVisibleRef.current = false; },
+      onEnterBack: () => { isVisibleRef.current = true; startLoop(); },
+      onLeaveBack: () => { isVisibleRef.current = false; },
+    });
+
+    return () => { stopLoop(); trigger.kill(); };
+  }, [isAccordion, startLoop, stopLoop]);
+
+  const handleMouseEnter = () => { pausedRef.current = true; };
+  const handleMouseLeave = () => { pausedRef.current = false; };
+
+  const handleStepClick = (i: number) => {
+    setActiveIndex(i);
+    // Reset timer so it waits full 3s from this click
+    stopLoop();
+    startLoop();
+  };
+
   return (
-    <div>
+    <div ref={containerRef}>
       {/* Intro */}
       <div className="mb-12 max-w-3xl space-y-6 md:mb-16">
         <WordReveal
@@ -127,6 +169,8 @@ export function CaseStudySolutionShowcase({
           className={
             imageOnRight ? "order-2 md:order-1" : "order-2 md:order-2"
           }
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
         >
           <ul className="divide-y divide-ink/10 border-y border-ink/10">
             {steps.map((s, i) => {
@@ -136,7 +180,7 @@ export function CaseStudySolutionShowcase({
                   {isAccordion ? (
                     <button
                       type="button"
-                      onClick={() => setActiveIndex(i)}
+                      onClick={() => handleStepClick(i)}
                       data-name="link"
                       data-text="Step"
                       className="group flex w-full cursor-pointer items-start gap-6 py-6 text-left transition-colors duration-300 md:gap-8"
