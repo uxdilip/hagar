@@ -182,11 +182,12 @@ export function ProcessSection() {
   }, []);
 
   return (
-    <section
-      id="process"
-      ref={sectionRef}
-      className="relative overflow-hidden bg-bg"
-    >
+    <div>
+      <section
+        id="process"
+        ref={sectionRef}
+        className="relative overflow-hidden bg-bg"
+      >
       {/* Desktop: full-viewport horizontal track */}
       <div className="hidden h-screen lg:block">
         <div
@@ -256,5 +257,6 @@ export function ProcessSection() {
         ))}
       </div>
     </section>
+    </div>
   );
 }

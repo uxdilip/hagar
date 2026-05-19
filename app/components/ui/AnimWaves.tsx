@@ -232,7 +232,9 @@ export function AnimWaves() {
         window.removeEventListener("resize", resizeHandler);
       }
       destroyWaves();
-      if (app) app.destroy(true);
+      // Pass `false` for removeView — the canvas element is owned by React.
+      // Letting PixiJS remove it causes React's removeChild to fail on unmount.
+      if (app) app.destroy({ removeView: false });
     };
   }, []);
 
