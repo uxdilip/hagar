@@ -1,16 +1,16 @@
 "use client";
 
-import Link from "next/link";
 import { CaseStudyMedia } from "./CaseStudyMedia";
 import { WordReveal } from "./CaseStudyText";
 import { getAdjacent } from "@/lib/caseStudies";
 
-function scrollToTop() {
-  window.scrollTo(0, 0);
-}
-
 /**
  * CaseStudyStepper — prev/next case study navigation at the bottom.
+ *
+ * Uses native <a> tags (full page reload) instead of Next.js Link.
+ * This guarantees the new page starts at the top with a fresh Lenis
+ * instance — no scroll-position-stuck-mid-page bugs from client-side
+ * navigation racing with Lenis's cached state.
  */
 export function CaseStudyStepper({ slug }: { slug: string }) {
   const adjacent = getAdjacent(slug);
@@ -20,11 +20,7 @@ export function CaseStudyStepper({ slug }: { slug: string }) {
   return (
     <nav className="mt-32 grid grid-cols-1 gap-12 border-t border-ink/10 pt-16 md:mt-40 md:grid-cols-2 md:gap-16 md:pt-24">
       {/* Previous */}
-      <Link
-        href={`/work/${prev.slug}`}
-        onClick={scrollToTop}
-        className="group block"
-      >
+      <a href={`/work/${prev.slug}`} className="group block">
         <p className="text-[11px] uppercase tracking-[0.3em] text-ink-muted">
           ← Previous project
         </p>
@@ -40,14 +36,10 @@ export function CaseStudyStepper({ slug }: { slug: string }) {
         <p className="mt-2 text-xs uppercase tracking-widest text-ink-muted">
           {prev.client} · {prev.year}
         </p>
-      </Link>
+      </a>
 
       {/* Next */}
-      <Link
-        href={`/work/${next.slug}`}
-        onClick={scrollToTop}
-        className="group block md:text-right"
-      >
+      <a href={`/work/${next.slug}`} className="group block md:text-right">
         <p className="text-[11px] uppercase tracking-[0.3em] text-ink-muted">
           Next project →
         </p>
@@ -63,7 +55,7 @@ export function CaseStudyStepper({ slug }: { slug: string }) {
         <p className="mt-2 text-xs uppercase tracking-widest text-ink-muted">
           {next.client} · {next.year}
         </p>
-      </Link>
+      </a>
     </nav>
   );
 }
