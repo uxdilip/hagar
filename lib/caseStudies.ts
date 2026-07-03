@@ -10,228 +10,228 @@ export type MetaItem = { label: string; value: string };
 
 export type CaseStudySection =
   | {
-      type: "media";
-      src: string;
-      alt?: string;
-      aspect?: string;
-      caption?: string;
-    }
+    type: "media";
+    src: string;
+    alt?: string;
+    aspect?: string;
+    caption?: string;
+  }
   | {
-      type: "text";
-      heading?: string;
-      body: string[];
-    }
+    type: "text";
+    heading?: string;
+    body: string[];
+  }
   | {
-      type: "section-intro"; // optional small tagline + h2 + lede paragraph
+    type: "section-intro"; // optional small tagline + h2 + lede paragraph
+    tagline?: string;
+    heading: string;
+    body?: string;
+    align?: "left" | "center";
+  }
+  | {
+    type: "feature-cards"; // 3-up cards with icon + heading + body
+    heading?: string;
+    body?: string;
+    cards: { icon: string; heading: string; body: string }[];
+  }
+  | {
+    type: "principles-grid"; // 4-up cards, dark icons + heading + body
+    heading: string;
+    cards: { icon: string; heading: string; body: string }[];
+  }
+  | {
+    type: "design-challenge"; // big callout box with highlighted text
+    label: string; // e.g. "Design Challenge"
+    text: string; // supports {h1}…{/h1} for highlight
+    theme?: "light" | "rose";
+  }
+  | {
+    type: "text-columns"; // multi-column tagline+heading+body blocks
+    heading?: string; // optional section heading rendered above the columns
+    tagline?: string; // optional small tagline above the heading
+    body?: string; // optional intro paragraph between heading and columns
+    columns: { tagline?: string; heading: string; body: string }[];
+    cols?: 1 | 2 | 3;
+    align?: "left" | "center";
+  }
+  | {
+    type: "text-list"; // grouped vertical list (tagline → items, repeat)
+    heading?: string;
+    groups: {
+      tagline: string;
+      items: { heading: string; body: string }[];
+    }[];
+  }
+  | {
+    type: "alternating-rows"; // flexible alternating image+text rows
+    items: {
+      image: string;
       tagline?: string;
       heading: string;
-      body?: string;
-      align?: "left" | "center";
-    }
+      body: string;
+      aspect?: string;
+      subBlock?: { tagline?: string; heading?: string; body: string };
+    }[];
+  }
   | {
-      type: "feature-cards"; // 3-up cards with icon + heading + body
-      heading?: string;
-      body?: string;
-      cards: { icon: string; heading: string; body: string }[];
-    }
+    type: "media-quad"; // 2x2 image grid with outer-only rounded corners
+    images: { src: string; alt?: string }[];
+  }
   | {
-      type: "principles-grid"; // 4-up cards, dark icons + heading + body
-      heading: string;
-      cards: { icon: string; heading: string; body: string }[];
-    }
+    type: "prototype-showcase"; // image + CTA button
+    image: string;
+    alt?: string;
+    buttonLabel: string;
+    buttonHref: string;
+  }
   | {
-      type: "design-challenge"; // big callout box with highlighted text
-      label: string; // e.g. "Design Challenge"
-      text: string; // supports {h1}…{/h1} for highlight
-      theme?: "light" | "rose";
-    }
+    type: "before-after"; // image with Before/After tags + checklist
+    items: { image: string; heading: string; points: string[] }[];
+  }
   | {
-      type: "text-columns"; // multi-column tagline+heading+body blocks
-      heading?: string; // optional section heading rendered above the columns
-      tagline?: string; // optional small tagline above the heading
-      body?: string; // optional intro paragraph between heading and columns
-      columns: { tagline?: string; heading: string; body: string }[];
-      cols?: 1 | 2 | 3;
-      align?: "left" | "center";
-    }
+    type: "pain-points"; // 3 stat cards: title + big number + description
+    tagline: string;
+    items: { title: string; value: string; description: string }[];
+  }
   | {
-      type: "text-list"; // grouped vertical list (tagline → items, repeat)
-      heading?: string;
-      groups: {
-        tagline: string;
-        items: { heading: string; body: string }[];
-      }[];
-    }
-  | {
-      type: "alternating-rows"; // flexible alternating image+text rows
-      items: {
-        image: string;
-        tagline?: string;
-        heading: string;
-        body: string;
-        aspect?: string;
-        subBlock?: { tagline?: string; heading?: string; body: string };
-      }[];
-    }
-  | {
-      type: "media-quad"; // 2x2 image grid with outer-only rounded corners
-      images: { src: string; alt?: string }[];
-    }
-  | {
-      type: "prototype-showcase"; // image + CTA button
+    type: "personas"; // alternating left/right rows with image + heading + JTBD
+    tagline: string;
+    heading: string;
+    items: {
       image: string;
-      alt?: string;
-      buttonLabel: string;
-      buttonHref: string;
-    }
-  | {
-      type: "before-after"; // image with Before/After tags + checklist
-      items: { image: string; heading: string; points: string[] }[];
-    }
-  | {
-      type: "pain-points"; // 3 stat cards: title + big number + description
-      tagline: string;
-      items: { title: string; value: string; description: string }[];
-    }
-  | {
-      type: "personas"; // alternating left/right rows with image + heading + JTBD
-      tagline: string;
-      heading: string;
-      items: {
-        image: string;
-        heading: string;
-        body: string;
-        jtbd: string;
-      }[];
-    }
-  | {
-      type: "solution-showcase"; // image + 3 numbered steps
-      tagline: string;
       heading: string;
       body: string;
-      image: string;
-      imagePosition?: "left" | "right";
-      steps: { num: string; heading: string; body: string; image?: string }[];
-    }
+      jtbd: string;
+    }[];
+  }
   | {
-      type: "info-grid";
-      challenge: string;
-      perspective: string;
-      meta: MetaItem[];
-    }
+    type: "solution-showcase"; // image + 3 numbered steps
+    tagline: string;
+    heading: string;
+    body: string;
+    image: string;
+    imagePosition?: "left" | "right";
+    steps: { num: string; heading: string; body: string; image?: string }[];
+  }
+  | {
+    type: "info-grid";
+    challenge: string;
+    perspective: string;
+    meta: MetaItem[];
+  }
   | { type: "media-grid"; images: { src: string; alt?: string; aspect?: string }[] }
   | { type: "quote"; text: string; author?: string }
   | {
-      type: "lottie"; // Lottie animation JSON (e.g. animated mobile screens)
-      src: string;
-      aspect?: string;
-      caption?: string;
-      /** Bottom-right mask dims to hide watermark from free-tier exports. */
-      maskWidth?: string;
-      maskHeight?: string;
-    }
+    type: "lottie"; // Lottie animation JSON (e.g. animated mobile screens)
+    src: string;
+    aspect?: string;
+    caption?: string;
+    /** Bottom-right mask dims to hide watermark from free-tier exports. */
+    maskWidth?: string;
+    maskHeight?: string;
+  }
   | {
-      type: "metrics";
-      tagline?: string;
-      heading?: string;
-      body?: string;
-      items: { value: string; label: string }[];
-    }
+    type: "metrics";
+    tagline?: string;
+    heading?: string;
+    body?: string;
+    items: { value: string; label: string }[];
+  }
   | {
-      type: "key-results"; // left-border bar style (Overview "Key Results at a Glance")
-      heading?: string;
-      items: { value: string; label: string }[];
-    }
+    type: "key-results"; // left-border bar style (Overview "Key Results at a Glance")
+    heading?: string;
+    items: { value: string; label: string }[];
+  }
   | {
-      type: "result-cards"; // rounded card style (Results & Impact)
-      items: { value: string; label: string }[];
-    }
+    type: "result-cards"; // rounded card style (Results & Impact)
+    items: { value: string; label: string }[];
+  }
   | {
-      type: "learnings-list"; // 2x2 numbered grid
-      tagline: string;
-      heading: string;
-      items: { num: string; heading: string; body: string }[];
-    }
+    type: "learnings-list"; // 2x2 numbered grid
+    tagline: string;
+    heading: string;
+    items: { num: string; heading: string; body: string }[];
+  }
   // ─── PROPOSAL CASE STUDY SECTIONS ────────────────────────────────────────
   // These are used exclusively by case studies with `layout: "proposal"`.
   | {
-      type: "proposal-hero"; // dark green hero with logo + H1 + body + image side
-      logo: string;
-      logoLabel: string;
-      heading: string; // supports {h1}…{/h1} for mint highlight
+    type: "proposal-hero"; // dark green hero with logo + H1 + body + image side
+    logo: string;
+    logoLabel: string;
+    heading: string; // supports {h1}…{/h1} for mint highlight
+    body: string;
+    heroImage: string;
+    presentedTo: { label: string; name: string };
+    presentedBy: { label: string; name: string };
+  }
+  | {
+    type: "proposal-section-header"; // centered tagline + H2 (mint) + body (white)
+    tagline: string;
+    heading: string; // supports {h1}…{/h1} for mint highlight
+    body?: string;
+    bg?: "dark" | "light"; // default "light" (mint bg #E1F6ED)
+  }
+  | {
+    type: "proposal-feature-text"; // 2-up text + image (alternating sides)
+    bg?: "dark" | "light";
+    heading: string; // section header above the rows
+    tagline?: string;
+    headerBody?: string;
+    items: {
+      eyebrow: string; // e.g. "GOAL", "USER SEGMENT" — caps mint
       body: string;
-      heroImage: string;
-      presentedTo: { label: string; name: string };
-      presentedBy: { label: string; name: string };
-    }
-  | {
-      type: "proposal-section-header"; // centered tagline + H2 (mint) + body (white)
-      tagline: string;
-      heading: string; // supports {h1}…{/h1} for mint highlight
-      body?: string;
-      bg?: "dark" | "light"; // default "light" (mint bg #E1F6ED)
-    }
-  | {
-      type: "proposal-feature-text"; // 2-up text + image (alternating sides)
-      bg?: "dark" | "light";
-      heading: string; // section header above the rows
-      tagline?: string;
-      headerBody?: string;
-      items: {
-        eyebrow: string; // e.g. "GOAL", "USER SEGMENT" — caps mint
-        body: string;
-        image: string;
-        imageOnRight?: boolean;
-      }[];
-    }
-  | {
-      type: "proposal-feature-cards"; // dark cards with icon + heading + body
-      bg?: "dark" | "light";
-      tagline: string;
-      heading: string; // supports {h1}…{/h1}
-      headerBody?: string;
-      cards: {
-        icon?: string; // optional SVG path
-        heading: string;
-        body: string;
-        image?: string; // optional bottom image for some cards
-      }[];
-      layout?: "market" | "features"; // market = 2 stacked + 1 large; features = 3 cols × 2 rows
-    }
-  | {
-      type: "proposal-table"; // multi-column table with header + data rows
-      bg?: "dark" | "light";
-      tagline: string;
-      heading: string;
-      headerBody?: string;
-      columns: { header: string; cells: string[] }[];
-    }
-  | {
-      type: "proposal-logo-grid"; // 6 competitor logos in wrapped flex grid
-      heading: string;
-      headerBody?: string;
-      logos: { src: string; alt: string }[];
-    }
-  | {
-      type: "proposal-timeline"; // horizontal timeline with progress dots
-      tagline: string;
-      heading: string;
-      headerBody?: string;
-      steps: {
-        date: string;
-        heading: string;
-        body: string;
-      }[];
-    }
-  | {
-      type: "proposal-contact"; // final contact section (left text + right image)
-      heading: string;
-      contactLabel: string;
-      email: string;
-      website: string;
-      socials: { label: string; href: string; icon: string }[];
       image: string;
-    };
+      imageOnRight?: boolean;
+    }[];
+  }
+  | {
+    type: "proposal-feature-cards"; // dark cards with icon + heading + body
+    bg?: "dark" | "light";
+    tagline: string;
+    heading: string; // supports {h1}…{/h1}
+    headerBody?: string;
+    cards: {
+      icon?: string; // optional SVG path
+      heading: string;
+      body: string;
+      image?: string; // optional bottom image for some cards
+    }[];
+    layout?: "market" | "features"; // market = 2 stacked + 1 large; features = 3 cols × 2 rows
+  }
+  | {
+    type: "proposal-table"; // multi-column table with header + data rows
+    bg?: "dark" | "light";
+    tagline: string;
+    heading: string;
+    headerBody?: string;
+    columns: { header: string; cells: string[] }[];
+  }
+  | {
+    type: "proposal-logo-grid"; // 6 competitor logos in wrapped flex grid
+    heading: string;
+    headerBody?: string;
+    logos: { src: string; alt: string }[];
+  }
+  | {
+    type: "proposal-timeline"; // horizontal timeline with progress dots
+    tagline: string;
+    heading: string;
+    headerBody?: string;
+    steps: {
+      date: string;
+      heading: string;
+      body: string;
+    }[];
+  }
+  | {
+    type: "proposal-contact"; // final contact section (left text + right image)
+    heading: string;
+    contactLabel: string;
+    email: string;
+    website: string;
+    socials: { label: string; href: string; icon: string }[];
+    image: string;
+  };
 
 export type CaseStudy = {
   slug: string;
@@ -266,12 +266,12 @@ export const caseStudies: CaseStudy[] = [
     slug: "sama-ai-listing",
     title: "Designing a Multi-Modal AI Listing Assistant",
     client: "Soum Marketplace",
-    year: "2023",
+    year: "2026",
     role: "UX/UI Designer",
-    duration: "Oct–Nov 2023",
+    duration: "Oct–Nov 2026",
     tags: ["AI", "Mobile", "iOS"],
     meta: [
-      { label: "Timeline", value: "Oct–Nov 2023" },
+      { label: "Timeline", value: "Oct–Nov 2026" },
       { label: "Role", value: "UX/UI Designer" },
       { label: "Tools", value: "Figma" },
       { label: "Platform", value: "iOS Mobile" },
@@ -609,12 +609,12 @@ export const caseStudies: CaseStudy[] = [
     slug: "soum-partners",
     title: "Soum Partners — a B2B inventory management portal",
     client: "Soum Marketplace",
-    year: "2023",
+    year: "2026",
     role: "UX/UI Designer",
-    duration: "Oct–Nov 2023",
+    duration: "Oct–Nov 2026",
     tags: ["B2B", "Web", "iOS"],
     meta: [
-      { label: "Timeline", value: "Oct–Nov 2023" },
+      { label: "Timeline", value: "Oct–Nov 2026" },
       { label: "Role", value: "UX/UI Designer" },
       { label: "Tools", value: "Figma" },
       { label: "Platform", value: "Desktop + iOS Mobile" },
@@ -1360,7 +1360,7 @@ export const caseStudies: CaseStudy[] = [
         body: "A comprehensive design strategy for empowering car owners across Saudi Arabia with convenient, on-demand vehicle care services.",
         heroImage: "/work/clepair-proposal/hero.png",
         presentedTo: { label: "Presented To", name: "Raed Al Mashhadi" },
-        presentedBy: { label: "Presented By", name: "Hagar Ragab" },
+        presentedBy: { label: "Presented By", name: "Hagar Hassan" },
       },
       // ─── GOAL & USER SEGMENT ──────────────────────────────────────────
       {

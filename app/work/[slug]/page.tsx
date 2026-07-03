@@ -19,9 +19,9 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const study = getCaseStudy(slug);
-  if (!study) return { title: "Not found · Hagar" };
+  if (!study) return { title: "Not found · Hagar Hassan" };
   return {
-    title: `${study.title} · Hagar`,
+    title: `${study.title} · Hagar Hassan`,
     description: study.tagline,
     openGraph: {
       title: study.title,

@@ -24,9 +24,9 @@ const nunito = Nunito_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Hagar — UI/UX Designer",
+  title: "Hagar Hassan — UI/UX Designer",
   description:
-    "Portfolio of Hagar, a UI/UX designer crafting clean, considered digital products.",
+    "Portfolio of Hagar Hassan, a UI/UX designer crafting clean, considered digital products.",
 };
 
 export default function RootLayout({

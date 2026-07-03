@@ -44,7 +44,7 @@ export function Footer() {
               </li>
             ))}
           </ul>
-          <p className="text-xs">© {new Date().getFullYear()} Hagar</p>
+          <p className="text-xs">© {new Date().getFullYear()} Hagar Hassan</p>
         </div>
       </div>
     </footer>
