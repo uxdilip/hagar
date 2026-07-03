@@ -54,14 +54,6 @@ export function Nav() {
     }
   }, [pathname, router]);
 
-  const handleClick = useCallback(
-    (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-      e.preventDefault();
-      scrollTo(href);
-    },
-    [scrollTo],
-  );
-
   return (
     <Navbar>
       {/* Desktop */}
@@ -69,11 +61,7 @@ export function Nav() {
         <NavbarLogo />
         <NavItems items={navItems} onItemClick={scrollTo} />
         <div className="flex items-center gap-4">
-          <NavbarButton
-            href={isHome ? "#work" : "/#work"}
-            variant="dark"
-            onClick={(e: React.MouseEvent<HTMLAnchorElement>) => handleClick(e, isHome ? "#work" : "/#work")}
-          >
+          <NavbarButton href="mailto:hagerragab94@gmail.com" variant="dark">
             Let&apos;s talk
           </NavbarButton>
         </div>
@@ -109,14 +97,10 @@ export function Nav() {
           ))}
           <div className="flex w-full flex-col gap-4">
             <NavbarButton
-              href={isHome ? "#work" : "/#work"}
+              href="mailto:hagerragab94@gmail.com"
               variant="dark"
               className="w-full"
-              onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
-                e.preventDefault();
-                setIsMobileMenuOpen(false);
-                scrollTo(isHome ? "#work" : "/#work");
-              }}
+              onClick={() => setIsMobileMenuOpen(false)}
             >
               Let&apos;s talk
             </NavbarButton>

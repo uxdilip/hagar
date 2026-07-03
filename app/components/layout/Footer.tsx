@@ -1,8 +1,8 @@
 const socials = [
-  { name: "LinkedIn", href: "#" },
-  { name: "Dribbble", href: "#" },
-  { name: "Behance", href: "#" },
-  { name: "Instagram", href: "#" },
+  {
+    name: "LinkedIn",
+    href: "https://www.linkedin.com/in/hager-ragab-bbb10b118?utm_source=share_via&utm_content=profile&utm_medium=member_ios",
+  },
 ];
 
 export function Footer() {
@@ -17,12 +17,12 @@ export function Footer() {
           </p>
 
           <a
-            href="mailto:hello@example.com"
+            href="mailto:hagerragab94@gmail.com"
             data-name="link"
             data-text="Email"
             className="mt-10 inline-block text-lg text-ink underline-offset-[6px] hover:underline"
           >
-            hello@example.com
+            hagerragab94@gmail.com
           </a>
         </div>
 
@@ -32,6 +32,8 @@ export function Footer() {
               <li key={s.name}>
                 <a
                   href={s.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   data-name="link"
                   data-text={s.name}
                   aria-label={s.name}
